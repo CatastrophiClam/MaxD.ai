@@ -11,9 +11,16 @@ export const PageWrapper = styled.div`
   background: black;
 `;
 
-export const ComingSoonWrapper = styled.div``;
+export const NameAndSocialButtonsSectionWrapper = styled.div``;
 
 export const NameWrapper = styled.div`
   ${OnedayHeading1}
   color: white;
+  margin-bottom: 75px;
+  user-select: none;
+`;
+
+export const SocialButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

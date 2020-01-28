@@ -2,6 +2,6 @@ export const OnedayFont = `'Oneday', -apple-system, BlinkMacSystemFont, San Fran
 
 export const OnedayHeading1 = `
   font-family: ${OnedayFont};
-  font-size: 100px;
+  font-size: 150px;
   font-weight: 400;
 `;
