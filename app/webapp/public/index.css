@@ -1,19 +1,6 @@
 @font-face {
-  font-family: "Anderson Grotesk";
-  src: local("Anderson Grotesk UltraBold"),
-    url(fonts/AndersonGrotesk-Ultrabold.otf) format("opentype");
-  font-weight: 800;
-}
-@font-face {
-  font-family: "Anderson Grotesk";
-  src: local("Anderson Grotesk Bold"),
-    url(fonts/AndersonGrotesk-Bold.otf) format("opentype");
-  font-weight: 600;
-}
-@font-face {
-  font-family: "Anderson Grotesk";
-  src: local("Anderson Grotesk"),
-    url(fonts/AndersonGrotesk.otf) format("opentype");
+  font-family: "Oneday";
+  src: local("Oneday"), url(fonts/Oneday.otf) format("opentype");
   font-weight: 400;
 }
 

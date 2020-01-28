@@ -1,11 +1,11 @@
 import React from "react";
 
-import { PageWrapper, ComingSoonWrapper } from "./styles/MainPage";
+import { PageWrapper, NameWrapper } from "./styles/MainPage";
 
 const MainPage = () => {
   return (
     <PageWrapper>
-      <ComingSoonWrapper>Coming soon...</ComingSoonWrapper>
+      <NameWrapper>MAX DAI</NameWrapper>
     </PageWrapper>
   );
 };
