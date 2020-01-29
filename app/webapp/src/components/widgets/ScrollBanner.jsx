@@ -11,7 +11,7 @@ import {
 /* Child Components */
 import DownArrow from "../image_wrappers/DownArrow";
 
-const ScrollBanner = ({ onClick, isDownwards }) => {
+const ScrollBanner = ({ onClick, isFacingDown }) => {
   const amplitude = 3;
   const [hovered, setHovered] = useState(false);
   const [from, setFrom] = useState(-amplitude);
@@ -35,16 +35,31 @@ const ScrollBanner = ({ onClick, isDownwards }) => {
     <ScrollBannerWrapper
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
     >
       <ScrollBannerHighlight />
-      <DownArrowWrapper
-        style={{
-          transform: yOffset.interpolate(yOffset => `translateY(${yOffset}px)`)
-        }}
-        isDownwards={isDownwards}
-      >
-        <DownArrow width="250" height="45" fill="#4F4F4F" />
-      </DownArrowWrapper>
+      {hovered ? (
+        <DownArrowWrapper
+          style={{
+            transform: isFacingDown ? "none" : " rotate(180deg)"
+          }}
+        >
+          <DownArrow width="250" height="45" fill="#4F4F4F" />
+        </DownArrowWrapper>
+      ) : (
+        <DownArrowWrapper
+          style={{
+            transform: yOffset.interpolate(
+              yOffset =>
+                `translateY(${yOffset}px) ${
+                  isFacingDown ? "" : " rotate(180deg)"
+                }`
+            )
+          }}
+        >
+          <DownArrow width="250" height="45" fill="#4F4F4F" />
+        </DownArrowWrapper>
+      )}
     </ScrollBannerWrapper>
   );
 };

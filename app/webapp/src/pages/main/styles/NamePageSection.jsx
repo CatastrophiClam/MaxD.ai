@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { OnedayHeading1 } from "../../../constants/Mixins";
+import { animated } from "react-spring";
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -14,14 +15,14 @@ export const PageWrapper = styled.div`
 
 export const NameAndSocialButtonsSectionWrapper = styled.div``;
 
-export const NameWrapper = styled.div`
+export const NameWrapper = styled(animated.div)`
   ${OnedayHeading1}
   color: white;
   margin-bottom: 75px;
   user-select: none;
 `;
 
-export const SocialButtonsWrapper = styled.div`
+export const SocialButtonsWrapper = styled(animated.div)`
   display: flex;
   justify-content: space-between;
 `;

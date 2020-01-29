@@ -4,6 +4,7 @@ import { interpolate } from "flubber";
 
 /* Styled Components */
 import { SocialButtonWrapper } from "./styles/SocialButton";
+import { memo } from "react";
 
 const SocialButton = ({ onClick, defaultSvg, hoverSvg }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -65,4 +66,4 @@ const SocialButton = ({ onClick, defaultSvg, hoverSvg }) => {
   );
 };
 
-export default SocialButton;
+export default memo(SocialButton);

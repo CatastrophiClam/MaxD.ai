@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useSpring } from "react-spring";
 
 /* Styled Components */
 import {
@@ -16,11 +17,15 @@ import ScrollBanner from "../../components/widgets/ScrollBanner";
 
 /* Constants */
 import { LINKEDIN_URL, GITHUB_URL, RESUME_URL } from "../../constants/Urls";
+import { DESCRIPTION_PAGE_SECTION_ID } from "../../constants/PageConstants";
 
 const openPage = url => {
   const win = window.open(url, "_blank");
   win.focus();
 };
+
+const openLinkedin = () => openPage(LINKEDIN_URL);
+const openGithub = () => openPage(GITHUB_URL);
 
 const download = url => {
   var file_path = url;
@@ -32,31 +37,107 @@ const download = url => {
   document.body.removeChild(a);
 };
 
-const NamePageSection = () => {
+const downloadResume = () => download(RESUME_URL);
+
+const max = (a, b) => {
+  if (a > b) {
+    return a;
+  }
+  return b;
+};
+
+const min = (a, b) => {
+  if (a < b) {
+    return a;
+  }
+  return b;
+};
+
+const NamePageSection = ({ scrollToSection }) => {
+  const startDisappearThreshold = 0.15;
+  const endDisappearThreshold = 0.4;
+  const fadeSpeed = 8;
+  const [scrollY, setScrollY] = useState(window.scrollY);
+
+  const setScroll = () => {
+    setScrollY(window.scrollY);
+  };
+
+  const scrollDown = useCallback(() => {
+    scrollToSection(DESCRIPTION_PAGE_SECTION_ID);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", setScroll);
+    return () => window.removeEventListener("scroll", setScroll);
+  }, []);
+
+  // offset x by window width when scroll at disappearThreshold, scale linearly
+  const goalXOffset =
+    (window.innerWidth *
+      min(
+        max(0, scrollY - window.innerHeight * startDisappearThreshold),
+        window.innerHeight * endDisappearThreshold
+      )) /
+    (window.innerHeight * endDisappearThreshold);
+
+  // exponentially decrease opacity as user scrolls down
+  const goalOpacity = Math.pow(
+    2,
+    (-min(
+      max(0, scrollY - window.innerHeight * startDisappearThreshold),
+      window.innerHeight * endDisappearThreshold
+    ) *
+      fadeSpeed) /
+      (window.innerHeight * endDisappearThreshold)
+  );
+
+  const { xOffset, newOpacity } = useSpring({
+    native: true,
+    to: { xOffset: goalXOffset, newOpacity: goalOpacity },
+    config: { duration: 0.1 }
+  });
+
   return (
     <PageWrapper>
       <NameAndSocialButtonsSectionWrapper>
-        <NameWrapper>MAX DAI</NameWrapper>
-        <SocialButtonsWrapper>
+        <NameWrapper
+          style={{
+            transform: xOffset.interpolate(
+              xOffset => `translateX(${-xOffset}px)`
+            ),
+            opacity: newOpacity.interpolate(newOpacity => newOpacity)
+          }}
+        >
+          MAX DAI
+        </NameWrapper>
+        <SocialButtonsWrapper
+          style={{
+            transform: xOffset.interpolate(
+              xOffset => `translateX(${xOffset}px)`
+            ),
+            opacity: newOpacity.interpolate(newOpacity => newOpacity)
+          }}
+        >
           <SocialButton
             defaultSvg={Linkedin}
             hoverSvg={Link}
-            onClick={() => openPage(LINKEDIN_URL)}
+            onClick={openLinkedin}
           />
           <SocialButton
             defaultSvg={Github}
             hoverSvg={Link}
-            onClick={() => openPage(GITHUB_URL)}
+            onClick={openGithub}
           />
           <SocialButton
             defaultSvg={Document}
             hoverSvg={Download}
-            onClick={() => download(RESUME_URL)}
+            onClick={downloadResume}
           />
         </SocialButtonsWrapper>
       </NameAndSocialButtonsSectionWrapper>
       <ScrollBannerWrapper>
-        <ScrollBanner />
+        <ScrollBanner isFacingDown onClick={scrollDown} />
       </ScrollBannerWrapper>
     </PageWrapper>
   );

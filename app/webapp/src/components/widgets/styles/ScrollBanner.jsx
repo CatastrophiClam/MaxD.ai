@@ -26,5 +26,5 @@ export const ScrollBannerHighlight = styled.div`
 `;
 
 export const DownArrowWrapper = styled(animated.div)`
-  ${({ isDownwards }) => (isDownwards ? "" : "transform: rotate(180);")}
+  ${({ isFacingDown }) => (isFacingDown ? "" : "transform: rotate(180deg);")}
 `;

@@ -10,7 +10,6 @@ html {
     Segoe UI, Helvetica Neue, sans-serif;
   font-size: 16px;
   color: #31393c;
-  background: #f4f5f7;
   scroll-behavior: smooth;
 
   /* Make type rendering look crisper */
@@ -27,7 +26,11 @@ html {
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 /**
