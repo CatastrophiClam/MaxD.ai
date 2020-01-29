@@ -7,13 +7,16 @@ import { SocialButtonWrapper } from "./styles/SocialButton";
 
 const SocialButton = ({ onClick, defaultSvg, hoverSvg }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [touched, setTouched] = useState(false);
 
   const onMouseEnter = () => {
     setIsHovered(true);
+    setTouched(true);
   };
 
   const onMouseLeave = () => {
     setIsHovered(false);
+    setTouched(true);
   };
 
   const toHover = useMemo(
@@ -47,9 +50,14 @@ const SocialButton = ({ onClick, defaultSvg, hoverSvg }) => {
           background={defaultSvg.background}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          onClick={onClick}
         >
           <animated.svg viewBox={defaultSvg.viewBox} fill={defaultSvg.fill}>
-            <animated.path d={t.interpolate(interpolator)} />
+            {touched ? (
+              <animated.path d={t.interpolate(interpolator)} />
+            ) : (
+              <path d={defaultSvg.path} />
+            )}
           </animated.svg>
         </SocialButtonWrapper>
       )}
