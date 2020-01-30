@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { useSpring } from "react-spring";
 
 /* Styled Components */
@@ -11,7 +11,7 @@ import {
 /* Child Components */
 import DownArrow from "../image_wrappers/DownArrow";
 
-const ScrollBanner = ({ onClick, isFacingDown }) => {
+const ScrollBanner = ({ onClick, onBottom, disabled }) => {
   const amplitude = 3;
   const [hovered, setHovered] = useState(false);
   const [from, setFrom] = useState(-amplitude);
@@ -36,12 +36,13 @@ const ScrollBanner = ({ onClick, isFacingDown }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
+      disabled={disabled}
     >
       <ScrollBannerHighlight />
       {hovered ? (
         <DownArrowWrapper
           style={{
-            transform: isFacingDown ? "none" : " rotate(180deg)"
+            transform: onBottom ? "none" : " rotate(180deg)"
           }}
         >
           <DownArrow width="250" height="45" fill="#4F4F4F" />
@@ -51,9 +52,7 @@ const ScrollBanner = ({ onClick, isFacingDown }) => {
           style={{
             transform: yOffset.interpolate(
               yOffset =>
-                `translateY(${yOffset}px) ${
-                  isFacingDown ? "" : " rotate(180deg)"
-                }`
+                `translateY(${yOffset}px) ${onBottom ? "" : " rotate(180deg)"}`
             )
           }}
         >
@@ -64,4 +63,4 @@ const ScrollBanner = ({ onClick, isFacingDown }) => {
   );
 };
 
-export default ScrollBanner;
+export default memo(ScrollBanner);

@@ -13,7 +13,11 @@ export const PageWrapper = styled.div`
   position: relative;
 `;
 
-export const NameAndSocialButtonsSectionWrapper = styled.div``;
+export const NameAndSocialButtonsSectionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export const NameWrapper = styled(animated.div)`
   ${OnedayHeading1}
@@ -25,10 +29,14 @@ export const NameWrapper = styled(animated.div)`
 export const SocialButtonsWrapper = styled(animated.div)`
   display: flex;
   justify-content: space-between;
+  width: 70%;
 `;
 
 export const ScrollBannerWrapper = styled.div`
   width: 100%;
   position: absolute;
   bottom: 0;
+  opacity: ${({ displaying }) => (displaying ? 1 : 0)};
+
+  transition: opacity 0.5s ease-in-out;
 `;

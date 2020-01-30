@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useSpring } from "react-spring";
 
 /* Styled Components */
@@ -12,11 +12,12 @@ import {
 
 /* Child Components */
 import SocialButton from "../../components/widgets/SocialButton";
-import { Linkedin, Link, Github, Document, Download } from "../../img/Svgs";
 import ScrollBanner from "../../components/widgets/ScrollBanner";
+import BackgroundAnimation from "./BackgroundAnimation";
 
 /* Constants */
 import { LINKEDIN_URL, GITHUB_URL, RESUME_URL } from "../../constants/Urls";
+import { Linkedin, Link, Github, Document, Download } from "../../img/Svgs";
 import { DESCRIPTION_PAGE_SECTION_ID } from "../../constants/PageConstants";
 
 const openPage = url => {
@@ -53,24 +54,17 @@ const min = (a, b) => {
   return b;
 };
 
-const NamePageSection = ({ scrollToSection }) => {
+const NamePageSection = ({ scrollToSection, scrollY }) => {
   const startDisappearThreshold = 0.15;
   const endDisappearThreshold = 0.4;
   const fadeSpeed = 8;
-  const [scrollY, setScrollY] = useState(window.scrollY);
+  const displayingScrollBanner = scrollY < (window.innerHeight * 2) / 5;
 
-  const setScroll = () => {
-    setScrollY(window.scrollY);
-  };
-
-  const scrollDown = useCallback(() => {
-    scrollToSection(DESCRIPTION_PAGE_SECTION_ID);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("scroll", setScroll);
-    return () => window.removeEventListener("scroll", setScroll);
-  }, []);
+  const onScrollDown = useCallback(() => {
+    if (displayingScrollBanner) {
+      scrollToSection(DESCRIPTION_PAGE_SECTION_ID);
+    }
+  }, [displayingScrollBanner]);
 
   // offset x by window width when scroll at disappearThreshold, scale linearly
   const goalXOffset =
@@ -80,6 +74,12 @@ const NamePageSection = ({ scrollToSection }) => {
         window.innerHeight * endDisappearThreshold
       )) /
     (window.innerHeight * endDisappearThreshold);
+
+  // offset y to keep stuff at same position on page
+  const goalYOffset = max(
+    0,
+    scrollY - startDisappearThreshold * window.innerHeight
+  );
 
   // exponentially decrease opacity as user scrolls down
   const goalOpacity = Math.pow(
@@ -92,19 +92,20 @@ const NamePageSection = ({ scrollToSection }) => {
       (window.innerHeight * endDisappearThreshold)
   );
 
-  const { xOffset, newOpacity } = useSpring({
+  const { offsets, newOpacity } = useSpring({
     native: true,
-    to: { xOffset: goalXOffset, newOpacity: goalOpacity },
+    to: { offsets: [goalXOffset, goalYOffset], newOpacity: goalOpacity },
     config: { duration: 0.1 }
   });
 
   return (
     <PageWrapper>
       <NameAndSocialButtonsSectionWrapper>
+        <BackgroundAnimation />
         <NameWrapper
           style={{
-            transform: xOffset.interpolate(
-              xOffset => `translateX(${-xOffset}px)`
+            transform: offsets.interpolate(
+              (x, y) => `translate(${-x}px, ${y}px)`
             ),
             opacity: newOpacity.interpolate(newOpacity => newOpacity)
           }}
@@ -113,8 +114,8 @@ const NamePageSection = ({ scrollToSection }) => {
         </NameWrapper>
         <SocialButtonsWrapper
           style={{
-            transform: xOffset.interpolate(
-              xOffset => `translateX(${xOffset}px)`
+            transform: offsets.interpolate(
+              (x, y) => `translate(${x}px, ${y}px)`
             ),
             opacity: newOpacity.interpolate(newOpacity => newOpacity)
           }}
@@ -136,8 +137,12 @@ const NamePageSection = ({ scrollToSection }) => {
           />
         </SocialButtonsWrapper>
       </NameAndSocialButtonsSectionWrapper>
-      <ScrollBannerWrapper>
-        <ScrollBanner isFacingDown onClick={scrollDown} />
+      <ScrollBannerWrapper displaying={displayingScrollBanner}>
+        <ScrollBanner
+          onBottom
+          onClick={onScrollDown}
+          disabled={!displayingScrollBanner}
+        />
       </ScrollBannerWrapper>
     </PageWrapper>
   );

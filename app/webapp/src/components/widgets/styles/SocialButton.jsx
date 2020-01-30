@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 
 export const SocialButtonWrapper = styled(animated.div)`
-  height: 100px;
-  width: 100px;
+  height: 70px;
+  width: 70px;
   border-radius: 25%;
   overflow: hide;
   box-shadow: 0 0 4px 4px white;

@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, memo } from "react";
 import { Spring, animated } from "react-spring/renderprops";
 import { interpolate } from "flubber";
 
 /* Styled Components */
 import { SocialButtonWrapper } from "./styles/SocialButton";
-import { memo } from "react";
 
 const SocialButton = ({ onClick, defaultSvg, hoverSvg }) => {
   const [isHovered, setIsHovered] = useState(false);

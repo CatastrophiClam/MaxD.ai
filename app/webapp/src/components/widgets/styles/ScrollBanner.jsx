@@ -12,19 +12,19 @@ export const ScrollBannerWrapper = styled.div`
 
   &:hover {
     opacity: 0.7;
-    cursor: pointer;
+    ${({ disabled }) => (disabled ? "" : "cursor: pointer;")}
   }
 `;
 
 export const ScrollBannerHighlight = styled.div`
   width: 100vw;
   position: absolute;
-  bottom: 0;
+  ${({ onBottom }) => (onBottom ? "bottom: 0;" : "top: 0;")}
   height: 100%;
   background-color: #5d5d5d;
   opacity: 0.2;
 `;
 
 export const DownArrowWrapper = styled(animated.div)`
-  ${({ isFacingDown }) => (isFacingDown ? "" : "transform: rotate(180deg);")}
+  ${({ onBottom }) => (onBottom ? "" : "transform: rotate(180deg);")}
 `;
