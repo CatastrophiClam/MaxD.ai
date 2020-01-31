@@ -1,4 +1,10 @@
 @font-face {
+  font-family: "Oneday";
+  src: local("Oneday"), url(fonts/Oneday.otf) format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
   font-family: "Anderson Grotesk";
   src: local("Anderson Grotesk UltraBold"),
     url(fonts/AndersonGrotesk-Ultrabold.otf) format("opentype");
@@ -23,7 +29,6 @@ html {
     Segoe UI, Helvetica Neue, sans-serif;
   font-size: 16px;
   color: #31393c;
-  background: #f4f5f7;
   scroll-behavior: smooth;
 
   /* Make type rendering look crisper */
@@ -40,7 +45,11 @@ html {
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 /**
