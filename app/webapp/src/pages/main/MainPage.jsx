@@ -34,12 +34,14 @@ const MainPage = () => {
       <div id={NAME_PAGE_SECTION_ID}>
         <NamePageSection scrollToSection={scrollToSection} scrollY={scrollY} />
       </div>
+      {/*}
       <div id={DESCRIPTION_PAGE_SECTION_ID}>
         <DescriptionPageSection
           scrollToSection={scrollToSection}
           scrollY={scrollY}
         />
       </div>
+    {*/}
     </PageWrapper>
   );
 };

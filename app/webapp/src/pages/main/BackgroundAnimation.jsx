@@ -18,7 +18,15 @@ const BackgroundAnimation = () => {
   const [height, setHeight] = useState(window.innerHeight);
   const [width, setWidth] = useState(window.innerWidth);
   const lineRef = useRef(0);
+  const userLineRef = useRef({
+    exists: false,
+    direction: null,
+    pastPoints: null,
+    x: -1,
+    y: -1
+  });
   const desiredNumLines = 5;
+
   const getInitialsForDirection = direction => {
     var x, y, dir;
     if (direction === "up") {
@@ -41,13 +49,39 @@ const BackgroundAnimation = () => {
     return [x, y, dir];
   };
 
-  useEffect(() => {
-    setHeight(window.innerHeight);
-  }, [window.innerHeight]);
+  const handleKeyDown = e => {
+    e = e || window.event;
+    const { x, y, direction } = userLineRef.current;
+    if (
+      e.keyCode === 38 ||
+      e.keyCode === 40 ||
+      e.keyCode === 37 ||
+      e.keyCode === 39
+    ) {
+      var newDirection = [0, -1]; //default up arrow
+      if (e.keyCode === 40) {
+        // down arrow
+        newDirection = [0, 1];
+      } else if (e.keyCode === 37) {
+        // left arrow
+        newDirection = [-1, 0];
+      } else if (e.keyCode === 39) {
+        // right arrow
+        newDirection = [1, 0];
+      }
+      if (
+        direction[0] !== newDirection[0] ||
+        direction[1] !== newDirection[1]
+      ) {
+        userLineRef.current.pastPoints.push([x, y]);
+        userLineRef.current.direction = newDirection;
+      }
+    }
+  };
 
   useEffect(() => {
-    setWidth(window.innerWidth);
-  }, [window.innerWidth]);
+    document.onkeydown = handleKeyDown;
+  }, []);
 
   const updateLinePoints = ([x, y, dir, pastPoints]) => {
     var newDir = dir;
@@ -73,7 +107,7 @@ const BackgroundAnimation = () => {
     context.lineWidth = 1;
     const color = "gray";
 
-    let t = timer(t0 => {
+    let t = timer(() => {
       context.strokeStyle = color;
       [x, y, dir, pastPoints] = updateLinePoints([x, y, dir, pastPoints]);
       const allPoints = [...pastPoints, [x, y]];
@@ -96,11 +130,60 @@ const BackgroundAnimation = () => {
     });
   };
 
+  const spawnUserLine = () => {
+    const direction = pickOneRandomly({
+      up: 0.25,
+      down: 0.25,
+      left: 0.25,
+      right: 0.25
+    });
+    const [x, y, dir] = getInitialsForDirection(direction);
+    const pastPoints = [[x, y]];
+
+    userLineRef.current = {
+      ...userLineRef.current,
+      x: x,
+      y: y,
+      direction: dir,
+      pastPoints: pastPoints
+    };
+
+    context.globalCompositeOperation = "source-over";
+    context.lineWidth = 1;
+    const color = "#c4a500";
+    let t = timer(() => {
+      userLineRef.current.x =
+        userLineRef.current.x + userLineRef.current.direction[0] * 5;
+      userLineRef.current.y =
+        userLineRef.current.y + userLineRef.current.direction[1] * 5;
+
+      const { x, y, pastPoints } = userLineRef.current;
+      context.strokeStyle = color;
+      const allPoints = [...pastPoints, [x, y]];
+      for (let i = 0; i < pastPoints.length; i++) {
+        context.beginPath();
+        context.moveTo(allPoints[i][0], allPoints[i][1]);
+        context.lineTo(allPoints[i + 1][0], allPoints[i + 1][1]);
+        context.stroke();
+      }
+
+      if (
+        x < -width / 2 ||
+        x > width / 2 ||
+        y < -height / 2 ||
+        y > height / 2
+      ) {
+        userLineRef.current.exists = false;
+        t.stop();
+      }
+    });
+  };
+
   const lineGenerator = () => {
     const generator = interval(() => {
       if (
         shouldDoWithProbablity(
-          Math.pow(10, -((lineRef.current * 2) / desiredNumLines))
+          Math.pow(9, -(lineRef.current / desiredNumLines))
         )
       ) {
         lineRef.current += 1;
@@ -108,8 +191,18 @@ const BackgroundAnimation = () => {
       }
     }, 100);
 
+    const userLineGenerator = interval(() => {
+      if (!userLineRef.current.exists) {
+        userLineRef.current.exists = true;
+        setTimeout(() => {
+          spawnUserLine();
+        }, 5000);
+      }
+    }, 100);
+
     return () => {
       generator.stop();
+      userLineGenerator.stop();
     };
   };
 
@@ -147,7 +240,7 @@ const BackgroundAnimation = () => {
         stopAllTimers();
       }
     };
-  }, [contextSet, width, height]);
+  }, [contextSet, width, height, context, fadeTick, lineGenerator]);
 
   return <Canvas width={width} height={height} ref={canvasRef} />;
 };

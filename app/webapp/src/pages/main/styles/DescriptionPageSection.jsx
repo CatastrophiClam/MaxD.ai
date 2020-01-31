@@ -1,10 +1,8 @@
 import styled from "styled-components";
+import { Heading1, Body } from "../../../constants/Mixins";
 
 export const PageWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -20,27 +18,32 @@ export const ScrollBannerWrapper = styled.div`
   transition: opacity 0.5s ease-in-out;
 `;
 
-export const AllPanelsWrapper = styled.div`
+export const AboutSectionWrapper = styled.div`
   display: flex;
-  width: 100%;
-  height: 100%;
-  position: relative;
+  flex-direction: column;
+  width: 50%;
 `;
 
-export const LeftPanelWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+export const AboutSectionHeader = styled.div`
+  ${Heading1}
+  color: black;
+  margin: 32px 0 0 32px;
 `;
 
-export const RightPanelWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
+export const AboutSectionBody = styled.div`
+  ${Body}
 `;
 
-export const BottomPanelWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
+export const ExperienceSectionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 `;
+
+export const ExperienceSectionHeader = styled.div`
+  ${Heading1}
+  color: black;
+  margin: 32px 0 0 32px;
+`;
+
+export const ExperienceSectionBody = styled.div``;

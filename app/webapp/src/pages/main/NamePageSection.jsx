@@ -40,20 +40,6 @@ const download = url => {
 
 const downloadResume = () => download(RESUME_URL);
 
-const max = (a, b) => {
-  if (a > b) {
-    return a;
-  }
-  return b;
-};
-
-const min = (a, b) => {
-  if (a < b) {
-    return a;
-  }
-  return b;
-};
-
 const NamePageSection = ({ scrollToSection, scrollY }) => {
   const startDisappearThreshold = 0.15;
   const endDisappearThreshold = 0.4;
@@ -69,14 +55,14 @@ const NamePageSection = ({ scrollToSection, scrollY }) => {
   // offset x by window width when scroll at disappearThreshold, scale linearly
   const goalXOffset =
     (window.innerWidth *
-      min(
-        max(0, scrollY - window.innerHeight * startDisappearThreshold),
+      Math.min(
+        Math.max(0, scrollY - window.innerHeight * startDisappearThreshold),
         window.innerHeight * endDisappearThreshold
       )) /
     (window.innerHeight * endDisappearThreshold);
 
   // offset y to keep stuff at same position on page
-  const goalYOffset = max(
+  const goalYOffset = Math.max(
     0,
     scrollY - startDisappearThreshold * window.innerHeight
   );
@@ -84,8 +70,8 @@ const NamePageSection = ({ scrollToSection, scrollY }) => {
   // exponentially decrease opacity as user scrolls down
   const goalOpacity = Math.pow(
     2,
-    (-min(
-      max(0, scrollY - window.innerHeight * startDisappearThreshold),
+    (-Math.min(
+      Math.max(0, scrollY - window.innerHeight * startDisappearThreshold),
       window.innerHeight * endDisappearThreshold
     ) *
       fadeSpeed) /
@@ -98,20 +84,16 @@ const NamePageSection = ({ scrollToSection, scrollY }) => {
     config: { duration: 0.1 }
   });
 
+  const nameWrapperStyle = {
+    transform: offsets.interpolate((x, y) => `translate(${-x}px, ${y}px)`),
+    opacity: newOpacity.interpolate(newOpacity => newOpacity)
+  };
+
   return (
     <PageWrapper>
       <NameAndSocialButtonsSectionWrapper>
         <BackgroundAnimation />
-        <NameWrapper
-          style={{
-            transform: offsets.interpolate(
-              (x, y) => `translate(${-x}px, ${y}px)`
-            ),
-            opacity: newOpacity.interpolate(newOpacity => newOpacity)
-          }}
-        >
-          MAX DAI
-        </NameWrapper>
+        <NameWrapper>MAX DAI</NameWrapper>
         <SocialButtonsWrapper
           style={{
             transform: offsets.interpolate(
@@ -137,6 +119,7 @@ const NamePageSection = ({ scrollToSection, scrollY }) => {
           />
         </SocialButtonsWrapper>
       </NameAndSocialButtonsSectionWrapper>
+      {/*}
       <ScrollBannerWrapper displaying={displayingScrollBanner}>
         <ScrollBanner
           onBottom
@@ -144,6 +127,7 @@ const NamePageSection = ({ scrollToSection, scrollY }) => {
           disabled={!displayingScrollBanner}
         />
       </ScrollBannerWrapper>
+        {*/}
     </PageWrapper>
   );
 };

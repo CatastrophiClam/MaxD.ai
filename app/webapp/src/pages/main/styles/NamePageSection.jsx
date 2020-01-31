@@ -24,6 +24,12 @@ export const NameWrapper = styled(animated.div)`
   color: white;
   margin-bottom: 75px;
   user-select: none;
+  z-index: 2;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.01);
+  }
 `;
 
 export const SocialButtonsWrapper = styled(animated.div)`
